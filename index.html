@@ -2,26 +2,29 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>ChatWave 💬</title>
+<title>ChatWave</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
 body {
   margin: 0;
   font-family: Arial;
-  background: #f0f0f0;
+  background: #e5ddd5;
 }
 
-/* HEADER */
 .header {
   background: #075e54;
   color: white;
   padding: 12px;
-  font-weight: bold;
+}
+
+/* AUTH */
+#authBox {
+  padding: 10px;
 }
 
 /* CHAT LIST */
-#chatList {
+#userList {
   height: 85vh;
   overflow-y: auto;
 }
@@ -34,15 +37,14 @@ body {
   cursor: pointer;
 }
 
-/* CHAT SCREEN */
-#chatScreen {
+/* CHAT */
+#chatBox {
   display: none;
   height: 75vh;
   overflow-y: auto;
   padding: 10px;
 }
 
-/* BUBBLES */
 .box {
   max-width: 70%;
   padding: 8px;
@@ -65,7 +67,6 @@ body {
 input {
   flex: 1;
   padding: 10px;
-  border: none;
 }
 
 button {
@@ -74,20 +75,12 @@ button {
   border: none;
   padding: 10px;
 }
-
-/* BACK BUTTON */
-.back {
-  background: #075e54;
-  color: white;
-  padding: 10px;
-  border: none;
-}
 </style>
 </head>
 
 <body>
 
-<div class="header">ChatWave 💬</div>
+<div class="header">ChatWave</div>
 
 <!-- AUTH -->
 <div id="authBox">
@@ -97,14 +90,11 @@ button {
   <button onclick="signup()">Signup</button>
 </div>
 
-<!-- CHAT LIST -->
-<div id="chatList"></div>
+<!-- USERS -->
+<div id="userList"></div>
 
-<!-- CHAT SCREEN -->
-<div id="chatScreen">
-  <button class="back" onclick="back()">⬅ Back</button>
-  <div id="messages"></div>
-</div>
+<!-- CHAT -->
+<div id="chatBox"></div>
 
 <!-- INPUT -->
 <div class="input-bar">
