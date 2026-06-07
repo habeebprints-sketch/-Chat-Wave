@@ -9,7 +9,7 @@
 body {
   margin: 0;
   font-family: Arial;
-  background: #e5ddd5;
+  background: #f0f0f0;
 }
 
 /* HEADER */
@@ -17,25 +17,27 @@ body {
   background: #075e54;
   color: white;
   padding: 12px;
+  font-weight: bold;
 }
 
-/* TABS */
-.tabs {
-  display: flex;
-  background: #128c7e;
-}
-.tabs button {
-  flex: 1;
-  padding: 10px;
-  color: white;
-  border: none;
-  background: transparent;
+/* CHAT LIST */
+#chatList {
+  height: 85vh;
+  overflow-y: auto;
 }
 
-/* CHAT */
-#chat, #status, #channels {
+.user {
+  background: white;
+  margin: 5px;
+  padding: 15px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+/* CHAT SCREEN */
+#chatScreen {
   display: none;
-  height: 60vh;
+  height: 75vh;
   overflow-y: auto;
   padding: 10px;
 }
@@ -48,57 +50,38 @@ body {
   border-radius: 10px;
   clear: both;
 }
+
 .me { background: #dcf8c6; float: right; }
 .other { background: white; float: left; }
 
 /* INPUT */
-.input-area {
+.input-bar {
   position: fixed;
   bottom: 0;
   width: 100%;
   display: flex;
 }
-input { flex: 1; padding: 10px; }
-button { background: #128c7e; color: white; border: none; padding: 10px; }
 
-/* CALL BUTTON */
-.call-btn {
-  position: fixed;
-  bottom: 80px;
-  right: 20px;
-  width: 55px;
-  height: 55px;
-  border-radius: 50%;
-  background: #25d366;
+input {
+  flex: 1;
+  padding: 10px;
+  border: none;
+}
+
+button {
+  background: #128c7e;
   color: white;
-  font-size: 20px;
+  border: none;
+  padding: 10px;
 }
 
-/* VIDEO */
-video {
-  width: 48%;
-  border-radius: 10px;
-}
-
-/* CALL UI */
-#callScreen {
-  display: none;
-  position: fixed;
-  inset: 0;
+/* BACK BUTTON */
+.back {
   background: #075e54;
   color: white;
-  text-align: center;
-  padding-top: 100px;
+  padding: 10px;
+  border: none;
 }
-
-.call-actions button {
-  margin: 10px;
-  padding: 15px;
-  border-radius: 50%;
-}
-
-.end { background: red; }
-.accept { background: green; }
 </style>
 </head>
 
@@ -106,46 +89,27 @@ video {
 
 <div class="header">ChatWave 💬</div>
 
-<div class="tabs">
-  <button onclick="showChat()">Chats</button>
-  <button onclick="showStatus()">Status</button>
-  <button onclick="showChannels()">Channels</button>
-</div>
-
 <!-- AUTH -->
 <div id="authBox">
   <input id="email" placeholder="Email">
   <input id="password" type="password" placeholder="Password">
-  <button onclick="signup()">Sign Up</button>
   <button onclick="login()">Login</button>
+  <button onclick="signup()">Signup</button>
 </div>
 
-<!-- SECTIONS -->
-<div id="chat"></div>
-<div id="status"></div>
-<div id="channels"></div>
+<!-- CHAT LIST -->
+<div id="chatList"></div>
+
+<!-- CHAT SCREEN -->
+<div id="chatScreen">
+  <button class="back" onclick="back()">⬅ Back</button>
+  <div id="messages"></div>
+</div>
 
 <!-- INPUT -->
-<div class="input-area">
+<div class="input-bar">
   <input id="msg" placeholder="Message">
   <button onclick="sendMessage()">Send</button>
-</div>
-
-<!-- CALL BUTTON -->
-<button class="call-btn" onclick="callUser()">📞</button>
-
-<!-- VIDEO -->
-<video id="localVideo" autoplay muted></video>
-<video id="remoteVideo" autoplay></video>
-
-<!-- CALL SCREEN -->
-<div id="callScreen">
-  <h2 id="callText"></h2>
-
-  <div class="call-actions">
-    <button class="accept" onclick="acceptCallUI()">✔</button>
-    <button class="end" onclick="endCall()">✖</button>
-  </div>
 </div>
 
 <script type="module" src="app.js"></script>
