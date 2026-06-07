@@ -30,22 +30,28 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-// ================= AUTH =================
+// ================= WEBRTC =================
+let localStream;
+let peerConnection;
 
+const servers = {
+  iceServers: [{ urls: "stun:stun.l.google.com:19302" }]
+};
+
+// ================= AUTH =================
 window.signup = () => {
   createUserWithEmailAndPassword(auth, email.value, password.value)
-    .then(() => alert("Signup successful"))
+    .then(() => alert("Signup OK"))
     .catch(e => alert(e.message));
 };
 
 window.login = () => {
   signInWithEmailAndPassword(auth, email.value, password.value)
-    .then(() => alert("Login successful"))
+    .then(() => alert("Login OK"))
     .catch(e => alert(e.message));
 };
 
-// ================= AUTH STATE =================
-
+// ================= APP STATE =================
 onAuthStateChanged(auth, (user) => {
   if (user) {
     authBox.style.display = "none";
@@ -58,7 +64,6 @@ onAuthStateChanged(auth, (user) => {
 });
 
 // ================= CHAT =================
-
 window.sendMessage = async () => {
   if (!auth.currentUser) return;
 
@@ -90,9 +95,8 @@ function loadMessages() {
 }
 
 // ================= STATUS =================
-
 window.postStatus = async () => {
-  const text = prompt("Enter status:");
+  const text = prompt("Status:");
 
   await addDoc(collection(db, "status"), {
     text,
@@ -120,7 +124,6 @@ function loadStatus() {
 }
 
 // ================= CHANNELS =================
-
 window.createChannel = async () => {
   const name = prompt("Channel name:");
 
@@ -149,9 +152,7 @@ function loadChannels() {
   });
 }
 
-// ================= CALL SYSTEM (STEP 1 + 2) =================
-
-// 📞 START CALL
+// ================= CALL SYSTEM =================
 window.callUser = async () => {
   const target = prompt("Enter email to call:");
 
@@ -167,44 +168,55 @@ window.callUser = async () => {
   alert("📞 Calling " + target);
 };
 
-// 📡 LISTEN FOR INCOMING CALLS
+// ================= INCOMING CALLS =================
 function listenForCalls() {
   onSnapshot(collection(db, "calls"), (snapshot) => {
-    snapshot.forEach((docSnap) => {
+    snapshot.forEach(docSnap => {
       const data = docSnap.data();
 
-      const me = auth.currentUser?.email;
-
-      if (data.to === me && data.status === "calling") {
+      if (data.to === auth.currentUser.email && data.status === "calling") {
         showIncomingCall(data.from);
       }
     });
   });
 }
 
-// 📲 INCOMING CALL POPUP
-window.showIncomingCall = function (callerEmail) {
-  const accept = confirm(
-    "📞 Incoming call from: " + callerEmail +
-    "\n\nPress OK to ACCEPT or Cancel to REJECT"
-  );
+// ================= INCOMING CALL UI =================
+window.showIncomingCall = function (caller) {
+  const accept = confirm("📞 Call from " + caller + "\nOK = Accept / Cancel = Reject");
 
   if (accept) {
-    acceptCall(callerEmail);
+    acceptCall(caller);
   } else {
-    alert("❌ Call rejected");
+    alert("Call rejected");
   }
 };
 
-// 📞 ACCEPT CALL (BASIC FOR NOW)
-window.acceptCall = function (callerEmail) {
-  alert("📞 Connecting call with " + callerEmail);
+// ================= ACCEPT CALL (WEBRTC START) =================
+window.acceptCall = async function (caller) {
+  alert("Connecting with " + caller);
 
-  // WebRTC video/audio will be added in next step
+  localStream = await navigator.mediaDevices.getUserMedia({
+    video: true,
+    audio: true
+  });
+
+  localVideo.srcObject = localStream;
+
+  peerConnection = new RTCPeerConnection(servers);
+
+  localStream.getTracks().forEach(track => {
+    peerConnection.addTrack(track, localStream);
+  });
+
+  peerConnection.ontrack = (event) => {
+    remoteVideo.srcObject = event.streams[0];
+  };
+
+  alert("Camera + mic ready (next step = full connection sync)");
 };
 
 // ================= NAV =================
-
 window.showChat = () => chat.style.display = "block";
 window.showStatus = () => status.style.display = "block";
 window.showChannels = () => channels.style.display = "block";
