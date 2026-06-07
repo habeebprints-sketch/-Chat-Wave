@@ -16,7 +16,7 @@ import {
   serverTimestamp
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-// Firebase config
+// ================= FIREBASE =================
 const firebaseConfig = {
   apiKey: "AIzaSyDxvSOTQBsy3Kl-pP34MxUDdGWsmUeiMyw",
   authDomain: "chat-wave-711fc.firebaseapp.com",
@@ -53,6 +53,7 @@ onAuthStateChanged(auth, (user) => {
     loadMessages();
     loadStatus();
     loadChannels();
+    listenForCalls();
   }
 });
 
@@ -91,7 +92,7 @@ function loadMessages() {
 // ================= STATUS =================
 
 window.postStatus = async () => {
-  const text = prompt("Status:");
+  const text = prompt("Enter status:");
 
   await addDoc(collection(db, "status"), {
     text,
@@ -148,8 +149,9 @@ function loadChannels() {
   });
 }
 
-// ================= CALL (STEP 1) =================
+// ================= CALL SYSTEM (STEP 1 + 2) =================
 
+// 📞 START CALL
 window.callUser = async () => {
   const target = prompt("Enter email to call:");
 
@@ -163,6 +165,42 @@ window.callUser = async () => {
   });
 
   alert("📞 Calling " + target);
+};
+
+// 📡 LISTEN FOR INCOMING CALLS
+function listenForCalls() {
+  onSnapshot(collection(db, "calls"), (snapshot) => {
+    snapshot.forEach((docSnap) => {
+      const data = docSnap.data();
+
+      const me = auth.currentUser?.email;
+
+      if (data.to === me && data.status === "calling") {
+        showIncomingCall(data.from);
+      }
+    });
+  });
+}
+
+// 📲 INCOMING CALL POPUP
+window.showIncomingCall = function (callerEmail) {
+  const accept = confirm(
+    "📞 Incoming call from: " + callerEmail +
+    "\n\nPress OK to ACCEPT or Cancel to REJECT"
+  );
+
+  if (accept) {
+    acceptCall(callerEmail);
+  } else {
+    alert("❌ Call rejected");
+  }
+};
+
+// 📞 ACCEPT CALL (BASIC FOR NOW)
+window.acceptCall = function (callerEmail) {
+  alert("📞 Connecting call with " + callerEmail);
+
+  // WebRTC video/audio will be added in next step
 };
 
 // ================= NAV =================
