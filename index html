@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>ChatWave</title>
+</head>
+<body>
+
+  <h1>ChatWave 💬</h1>
+
+  <input id="email" placeholder="Email">
+  <input id="password" placeholder="Password">
+
+  <button onclick="signup()">Sign Up</button>
+  <button onclick="login()">Login</button>
+
+  <hr>
+
+  <input id="msg" placeholder="Message">
+  <button onclick="sendMessage()">Send</button>
+
+  <div id="chat"></div>
+
+  <script type="module" src="app.js"></script>
+
+</body>
+</html>
