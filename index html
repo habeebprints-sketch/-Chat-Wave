@@ -8,93 +8,88 @@
   <style>
     body {
       font-family: Arial;
-      background: #f0f2f5;
       margin: 0;
+      background: #f0f2f5;
       text-align: center;
     }
 
     h1 {
       background: green;
       color: white;
-      padding: 10px;
       margin: 0;
-    }
-
-    #authBox {
       padding: 10px;
     }
 
-    input {
-      width: 80%;
+    input, button {
+      width: 85%;
       padding: 10px;
       margin: 5px;
     }
 
     button {
-      padding: 10px;
-      margin: 5px;
-      width: 85%;
       background: green;
       color: white;
       border: none;
     }
 
-    #chat {
+    #chat, #status, #channels {
       display: none;
-      flex-direction: column;
-      padding: 10px;
-      height: 60vh;
+      height: 30vh;
       overflow-y: auto;
-    }
-
-    .msg {
       padding: 10px;
-      margin: 5px;
-      border-radius: 10px;
-      max-width: 70%;
-      font-size: 14px;
     }
 
-    .me {
-      background: #dcf8c6;
-      align-self: flex-end;
-    }
-
-    .other {
+    .box {
       background: white;
-      align-self: flex-start;
-    }
-
-    #msgBox {
-      display: none;
+      margin: 5px;
+      padding: 10px;
+      border-radius: 10px;
+      text-align: left;
     }
   </style>
 </head>
 
 <body>
 
-  <h1>ChatWave 💬</h1>
+<h1>ChatWave 💬</h1>
 
-  <!-- AUTH -->
-  <div id="authBox">
-    <input id="email" placeholder="Email">
-    <input id="password" type="password" placeholder="Password">
+<!-- AUTH -->
+<div id="authBox">
+  <input id="email" placeholder="Email">
+  <input id="password" type="password" placeholder="Password">
 
-    <button onclick="signup()">Sign Up</button>
-    <button onclick="login()">Login</button>
-  </div>
+  <button onclick="signup()">Sign Up</button>
+  <button onclick="login()">Login</button>
+</div>
 
-  <hr>
+<hr>
 
-  <!-- CHAT -->
-  <div id="chat"></div>
+<!-- NAV -->
+<button onclick="showChat()">Chat</button>
+<button onclick="showStatus()">Status</button>
+<button onclick="showChannels()">Channels</button>
 
-  <div id="msgBox">
-    <input id="msg" placeholder="Type message...">
-    <button onclick="sendMessage()">Send</button>
-  </div>
+<hr>
 
-  <script type="module" src="app.js"></script>
+<!-- CHAT -->
+<div id="chat"></div>
+<input id="msg" placeholder="Message">
+<button onclick="sendMessage()">Send</button>
+
+<!-- STATUS -->
+<div id="status"></div>
+<button onclick="postStatus()">Post Status</button>
+
+<!-- CHANNELS -->
+<div id="channels"></div>
+<button onclick="createChannel()">Create Channel</button>
+
+<hr>
+
+<!-- CALL -->
+<button onclick="callUser()">📞 Call User</button>
+
+<script type="module" src="app.js"></script>
 
 </body>
 </html>
