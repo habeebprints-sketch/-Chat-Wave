@@ -2,7 +2,8 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/fireba
 import {
   getAuth,
   createUserWithEmailAndPassword,
-  signInWithEmailAndPassword
+  signInWithEmailAndPassword,
+  onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
 import {
@@ -15,8 +16,6 @@ import {
   serverTimestamp
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-
-// 🔥 YOUR FIREBASE CONFIG
 const firebaseConfig = {
   apiKey: "AIzaSyDxvSOTQBsy3Kl-pP34MxUDdGWsmUeiMyw",
   authDomain: "chat-wave-711fc.firebaseapp.com",
@@ -26,75 +25,80 @@ const firebaseConfig = {
   appId: "1:556719208115:web:47cb316cde725c134422c6"
 };
 
-
-// INIT FIREBASE
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-
-// ========================
-// 🔐 AUTH FUNCTIONS
-// ========================
-
+// AUTH
 window.signup = function () {
-  const email = document.getElementById("email").value;
-  const password = document.getElementById("password").value;
+  const email = emailBox().value;
+  const pass = passBox().value;
 
-  createUserWithEmailAndPassword(auth, email, password)
-    .then(() => {
-      alert("Account created!");
-    })
-    .catch(err => alert(err.message));
+  createUserWithEmailAndPassword(auth, email, pass)
+    .then(() => alert("Account created"))
+    .catch(e => alert(e.message));
 };
-
 
 window.login = function () {
-  const email = document.getElementById("email").value;
-  const password = document.getElementById("password").value;
+  const email = emailBox().value;
+  const pass = passBox().value;
 
-  signInWithEmailAndPassword(auth, email, password)
-    .then(() => {
-      alert("Login successful!");
-    })
-    .catch(err => alert(err.message));
+  signInWithEmailAndPassword(auth, email, pass)
+    .then(() => alert("Logged in"))
+    .catch(e => alert(e.message));
 };
 
-
-// ========================
-// 💬 SEND MESSAGE
-// ========================
-
+// SEND MESSAGE
 window.sendMessage = async function () {
   const msg = document.getElementById("msg").value;
+  const user = auth.currentUser;
 
-  if (msg === "") return;
+  if (!msg || !user) return;
 
   await addDoc(collection(db, "messages"), {
     text: msg,
+    email: user.email,
     time: serverTimestamp()
   });
 
   document.getElementById("msg").value = "";
 };
 
-
-// ========================
-// 📡 REALTIME CHAT
-// ========================
-
+// REAL TIME CHAT
 const q = query(collection(db, "messages"), orderBy("time"));
 
 onSnapshot(q, (snapshot) => {
-  const chatDiv = document.getElementById("chat");
-  chatDiv.innerHTML = "";
+  const chat = document.getElementById("chat");
+  chat.innerHTML = "";
+
+  const user = auth.currentUser;
 
   snapshot.forEach(doc => {
     const data = doc.data();
 
-    const p = document.createElement("p");
-    p.innerText = data.text;
+    const div = document.createElement("div");
+    div.classList.add("msg");
 
-    chatDiv.appendChild(p);
+    if (user && data.email === user.email) {
+      div.classList.add("me");
+    } else {
+      div.classList.add("other");
+    }
+
+    div.innerHTML = `
+      <b>${data.email}</b><br>
+      ${data.text}
+    `;
+
+    chat.appendChild(div);
   });
 });
+
+// helpers
+function emailBox() {
+  return document.getElementById("email");
+}
+
+function passBox() {
+  return document.getElementById("password");
+}
