@@ -1,25 +1,38 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>ChatWave</title>
+  <meta charset="UTF-8">
+  <title>ChatWave 💬</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
+
 <body>
 
   <h1>ChatWave 💬</h1>
 
-  <input id="email" placeholder="Email">
-  <input id="password" placeholder="Password">
+  <!-- AUTH SECTION -->
+  <h3>Login / Signup</h3>
+
+  <input type="email" id="email" placeholder="Enter Email">
+  <br><br>
+
+  <input type="password" id="password" placeholder="Enter Password">
+  <br><br>
 
   <button onclick="signup()">Sign Up</button>
   <button onclick="login()">Login</button>
 
   <hr>
 
-  <input id="msg" placeholder="Message">
+  <!-- CHAT SECTION -->
+  <h3>Chat Room</h3>
+
+  <input type="text" id="msg" placeholder="Type message...">
   <button onclick="sendMessage()">Send</button>
 
   <div id="chat"></div>
 
+  <!-- 🔥 IMPORTANT: MUST BE LAST LINE -->
   <script type="module" src="app.js"></script>
 
 </body>
