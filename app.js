@@ -16,6 +16,8 @@ import {
   serverTimestamp
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
+
+// 🔥 Firebase config
 const firebaseConfig = {
   apiKey: "AIzaSyDxvSOTQBsy3Kl-pP34MxUDdGWsmUeiMyw",
   authDomain: "chat-wave-711fc.firebaseapp.com",
@@ -25,17 +27,23 @@ const firebaseConfig = {
   appId: "1:556719208115:web:47cb316cde725c134422c6"
 };
 
+
+// INIT
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-// AUTH
+
+// =========================
+// 🔐 AUTH
+// =========================
+
 window.signup = function () {
   const email = emailBox().value;
   const pass = passBox().value;
 
   createUserWithEmailAndPassword(auth, email, pass)
-    .then(() => alert("Account created"))
+    .then(() => alert("Signup successful"))
     .catch(e => alert(e.message));
 };
 
@@ -44,11 +52,34 @@ window.login = function () {
   const pass = passBox().value;
 
   signInWithEmailAndPassword(auth, email, pass)
-    .then(() => alert("Logged in"))
+    .then(() => alert("Login successful"))
     .catch(e => alert(e.message));
 };
 
-// SEND MESSAGE
+
+// =========================
+// 👤 AUTH STATE
+// =========================
+
+onAuthStateChanged(auth, (user) => {
+  if (user) {
+    document.getElementById("chat").style.display = "flex";
+    document.getElementById("msgBox").style.display = "block";
+    document.getElementById("authBox").style.display = "none";
+
+    loadMessages(user);
+  } else {
+    document.getElementById("chat").style.display = "none";
+    document.getElementById("msgBox").style.display = "none";
+    document.getElementById("authBox").style.display = "block";
+  }
+});
+
+
+// =========================
+// 💬 SEND MESSAGE
+// =========================
+
 window.sendMessage = async function () {
   const msg = document.getElementById("msg").value;
   const user = auth.currentUser;
@@ -64,35 +95,42 @@ window.sendMessage = async function () {
   document.getElementById("msg").value = "";
 };
 
-// REAL TIME CHAT
-const q = query(collection(db, "messages"), orderBy("time"));
 
-onSnapshot(q, (snapshot) => {
-  const chat = document.getElementById("chat");
-  chat.innerHTML = "";
+// =========================
+// 📡 LOAD MESSAGES
+// =========================
 
-  const user = auth.currentUser;
+function loadMessages(user) {
+  const q = query(collection(db, "messages"), orderBy("time"));
 
-  snapshot.forEach(doc => {
-    const data = doc.data();
+  onSnapshot(q, (snapshot) => {
+    const chat = document.getElementById("chat");
+    chat.innerHTML = "";
 
-    const div = document.createElement("div");
-    div.classList.add("msg");
+    snapshot.forEach(doc => {
+      const data = doc.data();
 
-    if (user && data.email === user.email) {
-      div.classList.add("me");
-    } else {
-      div.classList.add("other");
-    }
+      const div = document.createElement("div");
+      div.classList.add("msg");
 
-    div.innerHTML = `
-      <b>${data.email}</b><br>
-      ${data.text}
-    `;
+      if (data.email === user.email) {
+        div.classList.add("me");
+      } else {
+        div.classList.add("other");
+      }
 
-    chat.appendChild(div);
+      div.innerHTML = `
+        <b>${data.email}</b><br>
+        ${data.text}
+      `;
+
+      chat.appendChild(div);
+    });
+
+    chat.scrollTop = chat.scrollHeight;
   });
-});
+}
+
 
 // helpers
 function emailBox() {
