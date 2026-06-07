@@ -20,8 +20,27 @@
       margin: 0;
     }
 
+    #authBox {
+      padding: 10px;
+    }
+
+    input {
+      width: 80%;
+      padding: 10px;
+      margin: 5px;
+    }
+
+    button {
+      padding: 10px;
+      margin: 5px;
+      width: 85%;
+      background: green;
+      color: white;
+      border: none;
+    }
+
     #chat {
-      display: flex;
+      display: none;
       flex-direction: column;
       padding: 10px;
       height: 60vh;
@@ -46,22 +65,8 @@
       align-self: flex-start;
     }
 
-    input {
-      width: 80%;
-      padding: 10px;
-      margin: 5px;
-    }
-
-    button {
-      padding: 10px;
-      background: green;
-      color: white;
-      border: none;
-      width: 85%;
-    }
-
-    #auth {
-      padding: 10px;
+    #msgBox {
+      display: none;
     }
   </style>
 </head>
@@ -71,7 +76,7 @@
   <h1>ChatWave 💬</h1>
 
   <!-- AUTH -->
-  <div id="auth">
+  <div id="authBox">
     <input id="email" placeholder="Email">
     <input id="password" type="password" placeholder="Password">
 
@@ -82,10 +87,12 @@
   <hr>
 
   <!-- CHAT -->
-  <input id="msg" placeholder="Type message...">
-  <button onclick="sendMessage()">Send</button>
-
   <div id="chat"></div>
+
+  <div id="msgBox">
+    <input id="msg" placeholder="Type message...">
+    <button onclick="sendMessage()">Send</button>
+  </div>
 
   <script type="module" src="app.js"></script>
 
