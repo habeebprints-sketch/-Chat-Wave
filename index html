@@ -4,35 +4,89 @@
   <meta charset="UTF-8">
   <title>ChatWave 💬</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    body {
+      font-family: Arial;
+      background: #f0f2f5;
+      margin: 0;
+      text-align: center;
+    }
+
+    h1 {
+      background: green;
+      color: white;
+      padding: 10px;
+      margin: 0;
+    }
+
+    #chat {
+      display: flex;
+      flex-direction: column;
+      padding: 10px;
+      height: 60vh;
+      overflow-y: auto;
+    }
+
+    .msg {
+      padding: 10px;
+      margin: 5px;
+      border-radius: 10px;
+      max-width: 70%;
+      font-size: 14px;
+    }
+
+    .me {
+      background: #dcf8c6;
+      align-self: flex-end;
+    }
+
+    .other {
+      background: white;
+      align-self: flex-start;
+    }
+
+    input {
+      width: 80%;
+      padding: 10px;
+      margin: 5px;
+    }
+
+    button {
+      padding: 10px;
+      background: green;
+      color: white;
+      border: none;
+      width: 85%;
+    }
+
+    #auth {
+      padding: 10px;
+    }
+  </style>
 </head>
 
 <body>
 
   <h1>ChatWave 💬</h1>
 
-  <!-- AUTH SECTION -->
-  <h3>Login / Signup</h3>
+  <!-- AUTH -->
+  <div id="auth">
+    <input id="email" placeholder="Email">
+    <input id="password" type="password" placeholder="Password">
 
-  <input type="email" id="email" placeholder="Enter Email">
-  <br><br>
-
-  <input type="password" id="password" placeholder="Enter Password">
-  <br><br>
-
-  <button onclick="signup()">Sign Up</button>
-  <button onclick="login()">Login</button>
+    <button onclick="signup()">Sign Up</button>
+    <button onclick="login()">Login</button>
+  </div>
 
   <hr>
 
-  <!-- CHAT SECTION -->
-  <h3>Chat Room</h3>
-
-  <input type="text" id="msg" placeholder="Type message...">
+  <!-- CHAT -->
+  <input id="msg" placeholder="Type message...">
   <button onclick="sendMessage()">Send</button>
 
   <div id="chat"></div>
 
-  <!-- 🔥 IMPORTANT: MUST BE LAST LINE -->
   <script type="module" src="app.js"></script>
 
 </body>
