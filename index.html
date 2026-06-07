@@ -34,7 +34,7 @@
 
     #chat, #status, #channels {
       display: none;
-      height: 30vh;
+      height: 25vh;
       overflow-y: auto;
       padding: 10px;
     }
@@ -45,6 +45,12 @@
       padding: 10px;
       border-radius: 10px;
       text-align: left;
+    }
+
+    video {
+      width: 45%;
+      border-radius: 10px;
+      margin: 5px;
     }
   </style>
 </head>
@@ -88,6 +94,10 @@
 
 <!-- CALL -->
 <button onclick="callUser()">📞 Call User</button>
+
+<!-- VIDEO AREA -->
+<video id="localVideo" autoplay muted></video>
+<video id="remoteVideo" autoplay></video>
 
 <script type="module" src="app.js"></script>
 
